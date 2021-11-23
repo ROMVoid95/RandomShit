@@ -1,0 +1,1030 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Galacticraft Capes API",
+    "description": "Galacticraft Cape API",
+    "termsOfService": "https://galacticraft.dev/api-terms",
+    "contact": {
+      "name": "Discord",
+      "url": "https://discord.gg/galacticraft"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://tldrlegal.com/license/mit-license"
+    },
+    "version": "0.1.1"
+  },
+  "servers": [
+    {
+      "url": "https://capes.galacticraft.team/api/v1/"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "cape",
+      "externalDocs": {
+        "url": "https://docs.galacticraft.dev/api/cape"
+      }
+    },
+    {
+      "name": "player",
+      "externalDocs": {
+        "url": "https://docs.galacticraft.dev/api/player"
+      }
+    },
+    {
+      "name": "type",
+      "externalDocs": {
+        "url": "https://docs.galacticraft.dev/api/type"
+      }
+    }
+  ],
+  "paths": {
+    "/ping": {
+      "get": {
+        "summary": "Server heartbeat operation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cape": {
+      "post": {
+        "tags": [
+          "cape"
+        ],
+        "summary": "Add a new cape to the store",
+        "operationId": "addCape",
+        "requestBody": {
+          "description": "Cape object that needs to be added to the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cape"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cape"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "$ref": "#/components/schemas/Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/cape/{capeName}": {
+      "get": {
+        "tags": [
+          "cape"
+        ],
+        "summary": "Find cape by name",
+        "description": "Returns a single cape",
+        "operationId": "getCapeByName",
+        "parameters": [
+          {
+            "name": "capeName",
+            "in": "path",
+            "description": "name of cape to return",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cape"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "$ref": "#/components/schemas/Error"
+          },
+          "404": {
+            "description": "Cape not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "cape"
+        ],
+        "summary": "Updates a cape",
+        "operationId": "updateCape",
+        "parameters": [
+          {
+            "name": "capeName",
+            "in": "path",
+            "description": "Name of the cape to update",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "redCape"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "cape"
+        ],
+        "summary": "Deletes a cape",
+        "operationId": "deleteCape",
+        "parameters": [
+          {
+            "name": "capeName",
+            "in": "path",
+            "description": "Cape name to delete",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "redCape"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Cape not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/player": {
+      "post": {
+        "tags": [
+          "player"
+        ],
+        "summary": "Create player",
+        "operationId": "createPlayer",
+        "requestBody": {
+          "description": "Created player object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/Player"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "write",
+              "read"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/player/{playername}": {
+      "get": {
+        "tags": [
+          "player"
+        ],
+        "summary": "Get player by player name",
+        "operationId": "getPlayerByName",
+        "parameters": [
+          {
+            "name": "playername",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid playername supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "player"
+        ],
+        "summary": "Updated player",
+        "description": "This can only be done by the logged in player.",
+        "operationId": "updatePlayer",
+        "parameters": [
+          {
+            "name": "playername",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated player object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/Player"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid player supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "write",
+              "read"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "tags": [
+          "player"
+        ],
+        "summary": "Delete player",
+        "description": "This can only be done by the logged in player.",
+        "operationId": "deletePlayer",
+        "parameters": [
+          {
+            "name": "playername",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid playername supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "write"
+            ]
+          }
+        ]
+      }
+    },
+    "/cape/type": {
+      "post": {
+        "tags": [
+          "type"
+        ],
+        "summary": "Create type",
+        "operationId": "createType",
+        "requestBody": {
+          "description": "Created type object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/Type"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/cape/type/{typeName}": {
+      "get": {
+        "tags": [
+          "type"
+        ],
+        "summary": "Get type by type name",
+        "operationId": "getTypeByName",
+        "parameters": [
+          {
+            "name": "typeName",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Type"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typename supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Type not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "type"
+        ],
+        "summary": "Updated type",
+        "operationId": "updateType",
+        "parameters": [
+          {
+            "name": "typeName",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated type object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/Type"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated Cape Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Type"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid type supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Type not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "tags": [
+          "type"
+        ],
+        "summary": "Delete type",
+        "operationId": "deleteType",
+        "parameters": [
+          {
+            "name": "typeName",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid typename supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Type not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Status of the operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "write",
+              "read"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/user/login": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs user into the system",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "The user name for login",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ]
+      }
+    },
+    "/user/logout": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs out current logged in user session",
+        "operationId": "logoutUser",
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/user/{username}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user by user name",
+        "operationId": "getUserByName",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use user1 for testing.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Updated user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated user object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid user supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "write"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid username supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "write"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "NotFound": {
+        "description": "The specified resource was not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Player": {
+        "required": [
+          "cape",
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "name": {
+            "pattern": "/([a-zA-Z0-9_]){3,16}/",
+            "type": "string",
+            "example": "Micdoodle8"
+          },
+          "cape": {
+            "$ref": "#/components/schemas/Cape",
+            "example": null
+          },
+          "allowedCapes": {
+            "$ref": "#/components/schemas/Type"
+          }
+        }
+      },
+      "Cape": {
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "redCape"
+          },
+          "type": {
+            "$ref": "#/components/schemas/Type"
+          }
+        }
+      },
+      "Type": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "default": "modern",
+            "enum": [
+              "legacy",
+              "developer",
+              "modern"
+            ],
+            "example": "modern"
+          }
+        },
+        "xml": {
+          "name": "Type"
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "username": {
+            "type": "string",
+            "example": "exampleUsername"
+          },
+          "player": {
+            "$ref": "#/components/schemas/Player"
+          }
+        }
+      },
+      "UUID": {
+        "type": "object",
+        "properties": {
+          "dashed": {
+            "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+            "type": "string",
+            "format": "uuid",
+            "example": "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "plain": {
+            "pattern": "[0-9a-f]{32}",
+            "type": "string",
+            "example": "046b6c7f0b8a43b9b35d6489e6daee91"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "RETURN OK"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://api.galacticraft.dev/auth",
+            "tokenUrl": "https://api.galacticraft.dev/auth/token",
+            "scopes": {
+              "read": "Grants read access",
+              "write": "Grants write access",
+              "admin": "Grants access to admin operations"
+            }
+          }
+        }
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}
